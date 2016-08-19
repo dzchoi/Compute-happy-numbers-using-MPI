@@ -72,10 +72,13 @@ int main(int argc, char *argv[])
 
     if ( rank == 0 ) {
 	MPI_Reduce(MPI_IN_PLACE, &count, 1, MPI_UNSIGNED, MPI_SUM, 0, MPI_COMM_WORLD);
+	    // With MPI_IN_PLACE, the input data is taken at the root from the receive buffer, where it will
+	    // be replaced by the output data.
 	printf("number of unhappy numbers in 1..%u = %u\n", up, count);
     }
     else
 	MPI_Reduce(&count, &count, 1, MPI_UNSIGNED, MPI_SUM, 0, MPI_COMM_WORLD);
+	    // The second &count for receive buffer is not significant here since we are not at root process.
 
     MPI_Finalize();
     return ( 0 );
